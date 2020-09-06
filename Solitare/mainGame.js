@@ -15,9 +15,11 @@ class Game{
 let aDeck = new Solitare.Deck().fillDeck().shuffle().flipPile();
 aDeck.showPile()
 aDeck.showDrawPile()
+console.log("-----------draw consecutevlie 9 new cards")
+aDeck.draw(3)
+aDeck.draw(3)
 aDeck.draw(3)
 aDeck.showDrawPile()
 aDeck.showPile()
-
 
 

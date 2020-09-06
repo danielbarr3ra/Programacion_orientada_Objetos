@@ -135,14 +135,26 @@ class Deck extends Pile{
     var m = this.__drawPile.size;
     if (m === 0){
       while (numberOfCards){
-        this.__drawPile.insertCard(this.lastCard)
+        if ( numberOfCards === 1 ) {
+          this.__drawPile.insertCard(this.lastCard.turnCard())
+        } else{
+          this.__drawPile.insertCard(this.lastCard)
+        }
         this.removeCard();
         numberOfCards -= 1
       }
       return  this
     } else {
-      console.log('adding method to insert pile')
-    }
+      //gotta reverse the last card in the draw pile
+      this.__drawPile.__cards[this.__drawPile.size -1 ] = this.__drawPile.lastCard.turnCard();
+      this.reversePile();
+      this.insertPile(this.__drawPile); //not sure if I should Reverse the card
+      this.reversePile();
+      while (this.__drawPile.size){
+        this.__drawPile.removeCard();
+      }
+        return this.draw(numberOfCards);
+      }
   }
   showDrawPile(){
     return this.__drawPile.showPile()
