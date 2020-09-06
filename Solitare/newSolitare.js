@@ -111,6 +111,12 @@ class Deck extends Pile{
     super(listCards);
     this.__drawPile = new Pile()
   }
+  get drawDeck() {
+    return this.__drawPile;
+  }
+  get drawDeckSize() {
+    return this.__drawPile.size;
+  }
   fillDeck() {
     const suits = ["Hearts","Spades","Diamonds","Clubs"] //H=0 r, S=1 b, D=2 r, C=3;
     suits.forEach( suit => {
@@ -157,7 +163,7 @@ class Deck extends Pile{
       }
   }
   showDrawPile(){
-    return this.__drawPile.showPile()
+    return this.drawDeck.showPile()
   }
 }
 

@@ -1,25 +1,52 @@
 const Solitare = require('./newSolitare')
 
 class Game{
-  constructor(){
+  constructor(difficulty){
+    this.changeDifficulty(difficulty)
     this.gameDeck = new Solitare.Deck().fillDeck().shuffle();
-    this.gameDrawPile = new Solitare.Pile()
+    this.drawCardFromDeck(this.__drawingNumber)
   }
-  drawCardsFromPile(amount){
-    drawPiles=this.gamaDeck.draw(amount)
-    
+  get drawNumber(){
+    return this.__drawingNumber
+  }
+  status(){
+    console.log("____________________________________________________________")
+    console.log(`There are currently ${this.gameDeck.size} cards in the deck`)
+    console.log(`These are the ${this.gameDeck.drawDeckSize}`)
+    this.gameDeck.showDrawPile();
+  }
+  drawCardFromDeck(){
+    this.gameDeck.draw(this.drawNumber);
     return this
+  }
+  changeDifficulty(difficutly){
+    this.__difficulty = difficutly
+    switch (difficutly) {
+      case "Easy":
+        this.__drawingNumber = 1
+        break;
+      case "Medium":
+        this.__drawingNumber = 2
+        break;
+      case "Hard":
+        this.__drawingNumber = 3
+        break;
+
+      default:
+        this.__drawingNumber = 1
+        break;
+    }
   }
 }
 
-let aDeck = new Solitare.Deck().fillDeck().shuffle().flipPile();
-aDeck.showPile()
-aDeck.showDrawPile()
-console.log("-----------draw consecutevlie 9 new cards")
-aDeck.draw(3)
-aDeck.draw(3)
-aDeck.draw(3)
-aDeck.showDrawPile()
-aDeck.showPile()
+const currentGame =  new Game("Easy");
+currentGame.status()
 
+currentGame.drawCardFromDeck()
+currentGame.status()
 
+currentGame.drawCardFromDeck()
+currentGame.status()
+
+currentGame.drawCardFromDeck()
+currentGame.status()
