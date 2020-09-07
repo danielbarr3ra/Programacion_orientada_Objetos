@@ -57,6 +57,10 @@ class Pile {
     this.__size = this.__cards.length;
     return this
   }
+  flipLastCard(){
+    this.__cards[this.size-1] = this.lastCard.turnCard();
+    return this
+  }
   reversePile() {
     this.__cards.reverse();
     return this
@@ -67,9 +71,18 @@ class Pile {
     });
     return this
   }
-
-  //remove a pile from the current pile
-  removePile(card){
+  removePile(numberOfCards){
+    const removedPile = new Pile()
+    while(numberOfCards){
+      let card = this.lastCard;
+      removedPile.insertCard(card);
+      this.removeCard();
+      numberOfCards -= 1
+    }
+    return removedPile
+  }
+  //remove pile based on card
+  pinchPile(card){
     if ( this.cards.includes(card) ){
       console.log("the card is in the pile")
       const index = this.cards.indexOf(card);
@@ -91,6 +104,7 @@ class Pile {
       insertedPile.removeCard();
       m -= 1
     }
+    return this
   }
 
   //displaying
@@ -98,11 +112,20 @@ class Pile {
     if (this.__cards === []){
       console.log("The Pile is Empty");
     } else {
-      console.log(`There are ${this.__size} in this pile`)
+      //console.log(`There are ${this.__size} in this pile`)
       this.__cards.forEach(card => {
         card.showCard();
       });
     }
+  }
+}
+class TablePile extends Pile{
+  constructor(pileNumber,listCards){
+  super(listCards);
+  this.__pileNumber =  pileNumber
+  }
+  get pileNumber(){
+    return this.__pileNumber
   }
 }
 
@@ -138,29 +161,17 @@ class Deck extends Pile{
     return this
   }
   draw(numberOfCards){
-    var m = this.__drawPile.size;
-    if (m === 0){
-      while (numberOfCards){
-        if ( numberOfCards === 1 ) {
-          this.__drawPile.insertCard(this.lastCard.turnCard())
-        } else{
-          this.__drawPile.insertCard(this.lastCard)
-        }
-        this.removeCard();
-        numberOfCards -= 1
-      }
-      return  this
-    } else {
-      //gotta reverse the last card in the draw pile
-      this.__drawPile.__cards[this.__drawPile.size -1 ] = this.__drawPile.lastCard.turnCard();
-      this.reversePile();
-      this.insertPile(this.__drawPile); //not sure if I should Reverse the card
-      this.reversePile();
-      while (this.__drawPile.size){
-        this.__drawPile.removeCard();
-      }
-        return this.draw(numberOfCards);
-      }
+   var m = this.__drawPile.size;
+   if (m === 0){
+    var aPile = this.removePile(numberOfCards)
+    this.__drawPile.insertPile(aPile.flipLastCard())
+    return this
+   } else {
+    this.__drawPile.flipLastCard();
+    this.reversePile().insertPile(this.__drawPile).reversePile();
+    this.__drawPile.removePile(this.__drawPile.size)
+    return this.draw(numberOfCards);
+    }
   }
   showDrawPile(){
     return this.drawDeck.showPile()
@@ -169,52 +180,12 @@ class Deck extends Pile{
 
 module.exports.Card = Card
 module.exports.Pile = Pile
+module.exports.TablePile = TablePile
 module.exports.Deck = Deck
 
 
-class DrawPile extends Pile{
-//not sure if need it yet it can just be called a pile
-}
-class TablePile extends Pile{
-
-}
 class Fundation extends Pile{
 //check fundation method
 }
 
-/*
-let aDeck = new Deck()
-aDeck.fillDeck()
-aDeck.shuffle().flipPile().showPile()
 
-draw5Cards = aDeck.draw(5);
-aDeck.showPile();
-draw5Cards.flipPile().showPile()
-
-
-console.log("lets Create 2 list  of Cards");
-let card1 = new Card("h",1)
-let card2 = new Card("d",2)
-let card3 = new Card("s",3)
-let card4 = new Card("c",4)
-let card5 = new Card("d",5)
-let card6 = new Card("h",6)
-let arr1 = [card1.turnCard(),card2.turnCard(),card3.turnCard()]
-let arr2 = [card4.turnCard(),card5.turnCard(),card6.turnCard()]
-let pile1 = new Pile(arr1)
-let pile2 = new Pile(arr2)
-pile1.showPile()
-pile2.showPile()
-
-pile1.insertPile(pile2)
-pile1.showPile()
-pile2.showPile()
-
-
-console.log('lets remove piles');
-pile1.showPile()
-let removedPile = pile1.removePile(card3)
-removedPile.showPile()
-//pile2.showPile()
-//console.log(pile2.size)
-*/
