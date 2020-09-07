@@ -1,5 +1,5 @@
-const Solitare = require('./newSolitare')
-
+const Solitare = require('./newSolitare');
+const rlSync = require('readline-sync');
 class Game{
   constructor(difficulty){
     this.changeDifficulty(difficulty)
@@ -21,6 +21,7 @@ class Game{
     console.log(`These are the ${this.gameDeck.drawDeckSize} cards in the draw deck`)
     this.gameDeck.showDrawPile();
     console.log('These is the table')
+    console.log('_________________________________________________')
     this.showTable();
   }
   drawCardFromDeck(){
@@ -61,20 +62,44 @@ class Game{
 
     }
   }
+  
+  validateSwitch(Card1,Card2){
+    //card 2 receivning card
+    //card 1 from pinched pile
+    if ( Card1.sameRank(Card2) && Card1.oppositeColorSuit(Car2) && Card1.oneRankDownOf(Card2) ){
+      return true
+    } else {
+      return false
+    }
+  }
+
+  switchPiletoPile(){
+    var SenderNumber, cardToPinch, aRank, aSuit,pinchedPile,ReceivingNumber,ReceivingCard;
+
+    ReceivingNumber = Number(rlSync.question("what pile do you want to append? "))
+    ReceivingCard = this["__tablePile"+ReceivingNumber].lastCard
+
+    SenderNumber = Number(rlSync.question("what pile do you want to pinch? "))
+    console.log("--------pile"+SenderNumber);
+    this["__tablePile"+SenderNumber].showPile();
+    aRank = Number(rlSync.question(`what is the rank of the topcard in pile ${SenderNumber} you want to pinch? `))
+    aSuit = rlSync.question("what is its suit? ")
+    cardToPinch = new Solitare.Card(aSuit,aRank).turnCard();
+    if ( this.validateSwitch(cardToPinch,ReceivingCard) ) {
+      return console.log("this is valid")
+    } else {
+      return console.log("this is not valid");
+    }
+  }
 }
 
 
 
 const currentGame =  new Game("Hard");
 currentGame.status()
+currentGame.switchPiletoPile()
 
-currentGame.drawCardFromDeck()
-currentGame.status()
 
-currentGame.drawCardFromDeck()
-currentGame.status()
 
-currentGame.drawCardFromDeck()
-currentGame.status()
 
 //console.log(currentGame)

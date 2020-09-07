@@ -29,8 +29,63 @@ class Card {
       return this
     }
   }
-}
+  //test thise mehtods
+  sameRank(card) {
+    if (this.rank === card.rank){
+      return true
+    } else {
+      return false
+    }
+  }
+  oneRankDownOf(card){
+    if (this.rank + 1 === card.rank){
+      return true
+    } else {
+      return false
+    }
+  }
+  sameSuit(card){
+    if (this.suit === card.suit){
+      return true
+    } else {
+      return false
+    }
+  }
+  oppositeColorSuit(card){
+    var suits, combination, soulutions;
+      suits={
+        "Hearts":"0",
+        "Spades":"1",
+        "Diamonds":"2",
+        "Clubs":"3"
+      }
+      combination = suits[this.suit]+suits[card.suit]
+      soulutions = ["01","10","23","32","03","30","21","12"]
+      return soulutions.includes(combination)
+  }
+  sameFaceUp(card){
+    if ( (this.face === true) && (card.face === true) ){
+      return true
+    } else {
+      return false
+    }
+  }
+  sameFaceDown(card){
+    if ( (this.face === false) && (card.face === false) ){
+      return true
+    } else {
+      return false
+    }
+  }
+  isKing(){
+    if (this.rank === 13){
+      return true
+    } else {
+      return false
+    }
+  }
 
+}
 class Pile {
   constructor(listCards) {
     this.__cards = listCards || [] ;
@@ -45,6 +100,9 @@ class Pile {
   }
   get lastCard() {
     return this.__cards.slice(-1)[0]
+  }
+  get firstCard() {
+    return this.__cards.slice(0)[0]
   }
   //mutating methods
   insertCard(aCard) {                 //used in insert pile
@@ -84,7 +142,6 @@ class Pile {
   //remove pile based on card
   pinchPile(card){
     if ( this.cards.includes(card) ){
-      console.log("the card is in the pile")
       const index = this.cards.indexOf(card);
       const removedCards = this.cards.slice(index);
       for ( let i = 0; i < removedCards.length; i++) {
@@ -92,8 +149,7 @@ class Pile {
       }
       return new Pile(removedCards);
     } else {
-      console.log("this is card is not in the pile")
-      return
+      return false
     }
   }
   insertPile(insertedPile){
@@ -128,7 +184,15 @@ class TablePile extends Pile{
     return this.__pileNumber
   }
 }
-
+class Fundation extends Pile{
+  constructor(suit,listCards){
+    super(listCards);
+    this.__suit = suit;
+  }
+  get fundatoinSuit(){
+    return this.__suit;
+  }
+}
 class Deck extends Pile{
   constructor(listCards){
     super(listCards);
@@ -183,9 +247,8 @@ module.exports.Pile = Pile
 module.exports.TablePile = TablePile
 module.exports.Deck = Deck
 
-
-class Fundation extends Pile{
-//check fundation method
-}
-
-
+//["Hearts","Spades","Diamonds","Clubs"]
+let card1, card2;
+card1 = new Card("Diaomonds",2);
+card2 = new Card("Spades",2);
+console.log(card1.oppositeColorSuit(card2)) 
