@@ -141,13 +141,11 @@ class Pile {
   }
   //remove pile based on card
   pinchPile(card){
-    if ( this.cards.includes(card) ){
-      const index = this.cards.indexOf(card);
-      const removedCards = this.cards.slice(index);
-      for ( let i = 0; i < removedCards.length; i++) {
-        this.removeCard();
-      }
-      return new Pile(removedCards);
+    if ( this.__cards.includes(card) ){
+      const index = this.__cards.indexOf(card);
+      const n = index - this.size - 1;
+      var removedCards = removePile(n)
+      return removedCards
     } else {
       return false
     }
@@ -173,6 +171,7 @@ class Pile {
         card.showCard();
       });
     }
+    return this
   }
 }
 class TablePile extends Pile{
@@ -248,7 +247,11 @@ module.exports.TablePile = TablePile
 module.exports.Deck = Deck
 
 //["Hearts","Spades","Diamonds","Clubs"]
-let card1, card2;
-card1 = new Card("Diaomonds",2);
-card2 = new Card("Spades",2);
-console.log(card1.oppositeColorSuit(card2)) 
+// let card1, card2, pil3,pil4;
+// card1 = new Card("Diaomonds",2);
+// card2 = new Card("Spades",2);
+// pil3 = new Pile([card1,card2])
+// pil4 = new Pile([card1,card2])
+// pil3.insertPile(pil4).showPile();
+// pil3.flipPile();
+// pil3.showPile();

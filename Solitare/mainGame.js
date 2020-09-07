@@ -64,9 +64,9 @@ class Game{
   }
   
   validateSwitch(Card1,Card2){
-    //card 2 receivning card
     //card 1 from pinched pile
-    if ( Card1.sameRank(Card2) && Card1.oppositeColorSuit(Car2) && Card1.oneRankDownOf(Card2) ){
+    //card 2 receivning card
+    if ( Card1.sameFaceUp(Card2) && Card1.oppositeColorSuit(Card2) && Card1.oneRankDownOf(Card2) ){
       return true
     } else {
       return false
@@ -74,21 +74,28 @@ class Game{
   }
 
   switchPiletoPile(){
-    var SenderNumber, cardToPinch, aRank, aSuit,pinchedPile,ReceivingNumber,ReceivingCard;
+    var SenderNumber, cardToPinch, aRank, aSuit,pinchedPile,ReceivingNumber,receivingCard;
 
     ReceivingNumber = Number(rlSync.question("what pile do you want to append? "))
-    ReceivingCard = this["__tablePile"+ReceivingNumber].lastCard
+    receivingCard = this["__tablePile"+ReceivingNumber].lastCard
 
     SenderNumber = Number(rlSync.question("what pile do you want to pinch? "))
     console.log("--------pile"+SenderNumber);
     this["__tablePile"+SenderNumber].showPile();
     aRank = Number(rlSync.question(`what is the rank of the topcard in pile ${SenderNumber} you want to pinch? `))
     aSuit = rlSync.question("what is its suit? ")
-    cardToPinch = new Solitare.Card(aSuit,aRank).turnCard();
-    if ( this.validateSwitch(cardToPinch,ReceivingCard) ) {
-      return console.log("this is valid")
-    } else {
-      return console.log("this is not valid");
+    cardToPinch = new Solitare.Card(aSuit,aRank).turnCard()
+    if (this.validateSwitch(cardToPinch,receivingCard)){
+      pinchedPile = this["__tablePile"+SenderNumber].pinchPile(cardToPinch)
+      console.log("this is the card look card:")
+      console.log(cardToPinch)
+      console.log("this is the pinched pile:") //pinched pile is faling
+      console.log(pinchedPile)
+      console.log("this is the receving table")
+      console.log(this["__tablePile"+ReceivingNumber])
+      //return this
+    } else{
+      return console.log("cant make this move")
     }
   }
 }
