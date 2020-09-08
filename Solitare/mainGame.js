@@ -62,7 +62,7 @@ class Game{
 
     }
   }
-  
+  //RULES
   validateSwitch(Card1,Card2){
     //card 1 from pinched pile
     //card 2 receivning card
@@ -72,9 +72,16 @@ class Game{
       return false
     }
   }
+  validateEmptySwitch(card){
+    if ( card.isKing() ){
+      return true
+    } else {
+      return false
+    }
+  }
 
   switchPiletoPile(){
-    var SenderNumber, cardToPinch, aRank, aSuit,pinchedPile,ReceivingNumber,receivingCard;
+    var SenderNumber, cardToPinch, aRank, aSuit,ReceivingNumber,receivingCard;
 
     ReceivingNumber = Number(rlSync.question("what pile do you want to append? "))
     receivingCard = this["__tablePile"+ReceivingNumber].lastCard
@@ -85,15 +92,25 @@ class Game{
     aRank = Number(rlSync.question(`what is the rank of the topcard in pile ${SenderNumber} you want to pinch? `))
     aSuit = rlSync.question("what is its suit? ")
     cardToPinch = new Solitare.Card(aSuit,aRank).turnCard()
+    //gotta add logic in case it is an empty then the validate swtich it should be to check if its king
+    //should add new rule class just thinking about it
+    if ( this["__tablePile"+ReceivingNumber].isEmpty() ) {
+      if (this.validateEmptySwitch(cardToPinch)){
+        var pinchedPile = this["__tablePile"+SenderNumber].pinchPile(cardToPinch)
+        this["__tablePile"+ReceivingNumber].insertPile(pinchedPile)
+        this["__tablePile"+SenderNumber].flipLastCard()
+      } else {
+        return console.log("sorry cant do this")
+      }
+    }
+    //when ever you pinch a pile which is face up you should add logic to not flip the last card from it
     if (this.validateSwitch(cardToPinch,receivingCard)){
-      pinchedPile = this["__tablePile"+SenderNumber].pinchPile(cardToPinch)
-      console.log("this is the card look card:")
-      console.log(cardToPinch)
-      console.log("this is the pinched pile:") //pinched pile is faling
-      console.log(pinchedPile)
-      console.log("this is the receving table")
-      console.log(this["__tablePile"+ReceivingNumber])
-      //return this
+      var pinchedPile = this["__tablePile"+SenderNumber].pinchPile(cardToPinch)
+      this["__tablePile"+ReceivingNumber].insertPile(pinchedPile)
+      if ( !( this["__tablePile"+SenderNumber].isEmpty() ) ){
+        this["__tablePile"+SenderNumber].flipLastCard();
+      }
+      return this
     } else{
       return console.log("cant make this move")
     }
@@ -101,12 +118,20 @@ class Game{
 }
 
 
-
+/*
 const currentGame =  new Game("Hard");
 currentGame.status()
-currentGame.switchPiletoPile()
+let n = 1
+while(n<10) {
+  currentGame.switchPiletoPile()
+  currentGame.status()
+  console.log(`move ${n}`)
+  n ++
+}
+*/
+
+//gotta check the drawing method did not get fucked
 
 
 
 
-//console.log(currentGame)

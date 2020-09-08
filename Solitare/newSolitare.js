@@ -78,7 +78,7 @@ class Card {
     }
   }
   isKing(){
-    if (this.rank === 13){
+    if (this.rank === 12){
       return true
     } else {
       return false
@@ -129,6 +129,17 @@ class Pile {
     });
     return this
   }
+  findInsiede(card){
+    var m = this.size-1
+    while (m >= 0 ){
+      var check = this.__cards.slice(m, m+1)[0]
+      if ( check.sameSuit(card) && check.sameRank(card) ){
+        return [true, m]
+      }
+      m -=1
+    }
+    return false
+  }
   removePile(numberOfCards){
     const removedPile = new Pile()
     while(numberOfCards){
@@ -141,17 +152,16 @@ class Pile {
   }
   //remove pile based on card
   pinchPile(card){
-    if ( this.__cards.includes(card) ){
-      const index = this.__cards.indexOf(card);
-      const n = index - this.size - 1;
-      var removedCards = removePile(n)
+    const check = this.findInsiede(card)
+    if (check[0] ){
+      const index = check[1];
+      const removedCards = this.removePile(this.size - index)
       return removedCards
     } else {
       return false
     }
   }
   insertPile(insertedPile){
-    insertedPile.reversePile();
     var m = insertedPile.size;
     while(m){
       this.insertCard(insertedPile.lastCard);
@@ -160,10 +170,16 @@ class Pile {
     }
     return this
   }
-
+  isEmpty(){
+    if (this.size === 0){
+      return true
+    } else {
+      return false
+    }
+  }
   //displaying
   showPile(){
-    if (this.__cards === []){
+    if (this.isEmpty()){
       console.log("The Pile is Empty");
     } else {
       //console.log(`There are ${this.__size} in this pile`)
@@ -226,11 +242,11 @@ class Deck extends Pile{
   draw(numberOfCards){
    var m = this.__drawPile.size;
    if (m === 0){
-    var aPile = this.removePile(numberOfCards)
-    this.__drawPile.insertPile(aPile.flipLastCard())
+    var aPile = this.removePile(numberOfCards).flipLastCard().reversePile()
+    this.__drawPile.insertPile(aPile)
     return this
    } else {
-    this.__drawPile.flipLastCard();
+    this.__drawPile.flipLastCard().reversePile();
     this.reversePile().insertPile(this.__drawPile).reversePile();
     this.__drawPile.removePile(this.__drawPile.size)
     return this.draw(numberOfCards);
@@ -246,12 +262,3 @@ module.exports.Pile = Pile
 module.exports.TablePile = TablePile
 module.exports.Deck = Deck
 
-//["Hearts","Spades","Diamonds","Clubs"]
-// let card1, card2, pil3,pil4;
-// card1 = new Card("Diaomonds",2);
-// card2 = new Card("Spades",2);
-// pil3 = new Pile([card1,card2])
-// pil4 = new Pile([card1,card2])
-// pil3.insertPile(pil4).showPile();
-// pil3.flipPile();
-// pil3.showPile();
