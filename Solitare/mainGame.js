@@ -118,7 +118,7 @@ class Game{
 }
 
 
-/*
+
 const currentGame =  new Game("Hard");
 currentGame.status()
 let n = 1
